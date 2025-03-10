@@ -1,0 +1,170 @@
+(REMOVE DUPLICATE ELEMENTES)
+
+
+#include <iostream>
+#include <unordered_set>
+
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+Node* createNode(int n) {
+    Node* newnode = new Node;
+    newnode->data = n;
+    newnode->next = NULL;
+    return newnode;
+}
+
+void insertAtEnd(int x, Node* &head) {
+    Node* newnode = createNode(x);
+    if (head == NULL)
+        head = newnode;
+    else {
+        Node* p = head;
+        while (p->next != NULL) {
+            p = p->next;
+        }
+        p->next = newnode;
+    }
+}
+
+void printList(Node* head) {
+    Node* temp = head;
+    while (temp != NULL) {
+        cout << temp->data << " -> ";
+        temp = temp->next;
+    }
+    cout << "NULL" << endl;
+}
+
+void purge(Node* &head) {
+    if (head == NULL) return;
+
+    unordered_set<int> seen;
+    Node* current = head;
+    Node* prev = NULL;
+
+    while (current != NULL) {
+        if (seen.find(current->data) != seen.end()) {  
+            prev->next = current->next;
+            delete current;
+            current = prev->next;
+        } else {
+            seen.insert(current->data);  
+            prev = current;
+            current = current->next;
+        }
+    }
+}
+
+int main() {
+    Node* head = NULL;
+
+    insertAtEnd(20, head);
+    insertAtEnd(40, head);
+    insertAtEnd(20, head);
+    insertAtEnd(60, head);
+    insertAtEnd(70, head);
+    insertAtEnd(60, head);
+    insertAtEnd(70, head);
+
+    cout << "Original List: ";
+    printList(head);
+    purge(head);
+    cout << "After Purging (Removing Duplicates): ";
+    printList(head);
+
+    return 0;
+}
+
+
+
+
+
+LOCATE IN RANGE (X,START POS , END POS)
+
+#include <iostream>
+
+using namespace std;
+
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+
+Node* createNode(int n) {
+    Node* newnode = new Node;
+    newnode->data = n;
+    newnode->next = NULL;
+    return newnode;
+}
+
+
+void insertAtEnd(int x, Node* &head) {
+    Node* newnode = createNode(x);
+    if (head == NULL)
+        head = newnode;
+    else {
+        Node* p = head;
+        while (p->next != NULL) {
+            p = p->next;
+        }
+        p->next = newnode;
+    }
+}
+
+void printList(Node* head) {
+    Node* temp = head;
+    while (temp != NULL) {
+        cout << temp->data << " -> ";
+        temp = temp->next;
+    }
+    cout << "NULL" << endl;
+}
+
+
+int locateInRange(Node* head, int x, int start, int end) {
+    if (head == NULL || start > end || start < 1) return -1;
+
+    Node* temp = head;
+    int position = 1;  
+
+    while (temp != NULL && position <= end) {
+        if (position >= start && temp->data == x) {
+            return position;  
+        }
+        temp = temp->next;
+        position++;
+    }
+    
+    return -1; 
+}
+
+int main() {
+    Node* head = NULL;
+
+    insertAtEnd(10, head);
+    insertAtEnd(20, head);
+    insertAtEnd(30, head);
+    insertAtEnd(40, head);
+    insertAtEnd(50, head);
+    insertAtEnd(60, head);
+
+    cout << "Linked List: ";
+    printList(head);
+
+    int x = 50, start = 4, end = 9;
+    int position = locateInRange(head, x, start, end);
+    
+    if (position != -1)
+        cout << "Element " << x << " found at position: " << position << " in range [" << start << ", " << end << "]\n";
+    else
+        cout << "Element " << x << " not found in range [" << start << ", " << end << "]\n";
+
+    return 0;
+}
